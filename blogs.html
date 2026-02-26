@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blogs — Sri Mahaganapathi Jewellers</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --orange: #C8651A; --orange-light: #E8821F; --orange-pale: #F5DFC0;
+    --black: #0D0D0D; --white: #FAFAF7; --cream: #F5EFE6;
+    --gold: #C9A84C; --gold-light: #E8CC7A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Raleway', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+
+  /* NAV */
+  #main-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(13,13,13,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; height: 68px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-brand-name { font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 600; color: var(--orange-light); letter-spacing: 0.2em; text-decoration: none; }
+  .nav-links { list-style: none; display: flex; gap: 40px; align-items: center; }
+  .nav-link { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.65); text-decoration: none; transition: color 0.3s; position: relative; padding-bottom: 4px; }
+  .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--orange-light); transition: width 0.3s ease; }
+  .nav-link:hover, .nav-link.active { color: var(--orange-light); }
+  .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+  .nav-hamburger { display: none; background: none; border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; }
+  .nav-mobile-menu { display: none; list-style: none; flex-direction: column; background: rgba(13,13,13,0.98); padding: 16px 40px 24px; gap: 16px; border-top: 1px solid rgba(201,168,76,0.1); }
+  .nav-mobile-menu.open { display: flex; }
+  .nav-mobile-menu a { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.7); text-decoration: none; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color 0.3s; }
+  .nav-mobile-menu a:hover { color: var(--orange-light); }
+  @media (max-width: 700px) { .nav-links { display: none; } .nav-hamburger { display: block; } .nav-inner { padding: 0 20px; } }
+
+  /* PAGE HERO */
+  .page-hero { margin-top: 68px; padding: 100px 40px 80px; text-align: center; background: linear-gradient(160deg, #1A0A00 0%, #0D0D0D 60%); position: relative; overflow: hidden; }
+  .page-hero::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(200,101,26,0.07) 0%, transparent 70%); pointer-events: none; }
+  .page-hero-label { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--orange-light); margin-bottom: 16px; }
+  .page-hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 20px; }
+  .page-hero-title em { font-style: italic; color: var(--orange-light); }
+  .page-hero-divider { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0 auto 24px; }
+  .page-hero-sub { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; color: rgba(255,255,255,0.5); max-width: 600px; margin: 0 auto; }
+
+  /* SECTION */
+  .section-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+  /* BLOG SECTION */
+  #blog-section { padding: 80px 0 100px; }
+
+  .blog-section-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 52px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    padding-bottom: 24px;
+  }
+
+  .blog-section-label { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--orange-light); margin-bottom: 8px; }
+  .blog-section-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--white); }
+
+  .view-all-link { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 3px; transition: all 0.3s; white-space: nowrap; }
+  .view-all-link:hover { color: var(--orange-light); border-color: var(--orange-light); }
+
+  /* LOADING */
+  #loading {
+    text-align: center; padding: 80px 20px;
+  }
+
+  .loading-spinner {
+    width: 40px; height: 40px;
+    border: 2px solid rgba(201,168,76,0.15);
+    border-top-color: var(--orange-light);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #loading p { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+
+  /* FEATURED CARD */
+  .featured-card {
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    border: 1px solid rgba(201,168,76,0.12); overflow: hidden;
+    transition: border-color 0.4s; text-decoration: none;
+    margin-bottom: 40px;
+  }
+  .featured-card:hover { border-color: var(--orange-light); }
+  .featured-img { height: 460px; overflow: hidden; position: relative; }
+  .featured-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); transition: transform 0.8s ease, filter 0.4s; display: block; }
+  .featured-card:hover .featured-img img { transform: scale(1.05); filter: brightness(0.65); }
+  .featured-content { padding: 48px 44px; background: rgba(255,255,255,0.02); display: flex; flex-direction: column; justify-content: center; }
+  .featured-tag { display: inline-block; background: var(--orange); color: var(--white); font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 5px 14px; margin-bottom: 20px; width: fit-content; }
+  .featured-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; line-height: 1.25; color: var(--white); margin-bottom: 14px; }
+  .featured-meta { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 18px; opacity: 0.7; }
+  .featured-excerpt { font-size: 0.87rem; color: rgba(255,255,255,0.5); line-height: 1.9; margin-bottom: 28px; }
+  .featured-read-more { display: inline-flex; align-items: center; gap: 6px; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--orange-light); border-bottom: 1px solid rgba(232,130,31,0.4); padding-bottom: 4px; transition: all 0.3s; width: fit-content; }
+  .featured-read-more:hover { color: var(--white); border-color: var(--white); }
+
+  /* BLOG GRID */
+  .blogs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .blog-card { border: 1px solid rgba(201,168,76,0.1); overflow: hidden; background: rgba(255,255,255,0.02); transition: border-color 0.3s, transform 0.4s; display: flex; flex-direction: column; text-decoration: none; }
+  .blog-card:hover { border-color: var(--orange-light); transform: translateY(-6px); }
+  .blog-card-img { height: 210px; overflow: hidden; background: #1a1208; }
+  .blog-card-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.82); transition: transform 0.6s ease, filter 0.4s; display: block; }
+  .blog-card:hover .blog-card-img img { transform: scale(1.06); filter: brightness(1); }
+  .blog-card-content { padding: 22px 22px 26px; flex: 1; display: flex; flex-direction: column; }
+  .blog-card-tag { display: inline-block; font-family: 'Cinzel', serif; font-size: 0.46rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange-light); border: 1px solid rgba(232,130,31,0.3); padding: 3px 10px; margin-bottom: 12px; width: fit-content; }
+  .blog-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 400; color: var(--white); margin-bottom: 10px; line-height: 1.35; flex: 1; }
+  .blog-card-meta { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.25); margin-bottom: 12px; }
+  .blog-card-excerpt { font-size: 0.8rem; color: rgba(255,255,255,0.4); line-height: 1.8; margin-bottom: 18px; }
+  .blog-card-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; margin-top: auto; }
+  .blog-card-link { font-family: 'Cinzel', serif; font-size: 0.54rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange-light); }
+  .blog-card-arrow { color: var(--orange-light); font-size: 0.8rem; }
+
+  /* ERROR */
+  #error-msg { display: none; text-align: center; padding: 60px 20px; }
+  #error-msg p { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: rgba(255,255,255,0.35); margin-bottom: 24px; }
+  .retry-btn { display: inline-block; padding: 12px 32px; border: 1px solid var(--orange-light); color: var(--orange-light); font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; cursor: pointer; background: none; }
+  .retry-btn:hover { background: var(--orange); border-color: var(--orange); color: var(--white); }
+
+  /* VIEW ALL BOX */
+  .view-all-box { text-align: center; border: 1px solid rgba(201,168,76,0.15); padding: 56px 40px; background: rgba(255,255,255,0.015); margin-top: 56px; }
+  .view-all-box p { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: rgba(255,255,255,0.4); margin-bottom: 28px; }
+  .view-all-btn { display: inline-block; padding: 14px 44px; border: 1px solid var(--orange-light); color: var(--white); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; transition: all 0.3s; position: relative; overflow: hidden; }
+  .view-all-btn::before { content: ''; position: absolute; inset: 0; background: var(--orange); transform: translateX(-100%); transition: transform 0.4s ease; z-index: -1; }
+  .view-all-btn:hover::before { transform: translateX(0); }
+  .view-all-btn:hover { border-color: var(--orange); }
+
+  /* FOOTER */
+  footer { background: #080503; padding: 48px 40px; text-align: center; border-top: 1px solid rgba(201,168,76,0.1); }
+  .footer-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+  .footer-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; color: rgba(255,255,255,0.35); margin-bottom: 24px; }
+  .footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .featured-card { grid-template-columns: 1fr; }
+    .featured-img { height: 280px; }
+    .featured-content { padding: 32px 28px; }
+    .blogs-grid { grid-template-columns: 1fr 1fr; }
+    .blog-section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .section-inner { padding: 0 24px; }
+  }
+  @media (max-width: 600px) {
+    .blogs-grid { grid-template-columns: 1fr; }
+    .featured-content { padding: 24px 18px; }
+    .section-inner { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand-name">SMJ</a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      
+      <li><a href="blogs.html" class="nav-link active">Blogs</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="toggleMenu()">&#9776;</button>
+  </div>
+  <ul class="nav-mobile-menu" id="mobileMenu">
+    <li><a href="index.html" onclick="toggleMenu()">Home</a></li>
+    
+    <li><a href="blogs.html" onclick="toggleMenu()">Blogs</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <p class="page-hero-label">Stories · Tips · Insights</p>
+  <h1 class="page-hero-title">The SMJ <em>Journal</em></h1>
+  <div class="page-hero-divider"></div>
+  <p class="page-hero-sub">Jewellery care tips, buying guides, styling inspiration and stories from our world of gold.</p>
+</div>
+
+<!-- BLOG SECTION -->
+<section id="blog-section">
+  <div class="section-inner">
+    <div class="blog-section-header">
+      <div>
+        <p class="blog-section-label">From Our Journal</p>
+        <h2 class="blog-section-title">Latest Articles</h2>
+      </div>
+      <a href="https://srimahaganapathijewellers.blogspot.com/" target="_blank" class="view-all-link">View All on Blogger →</a>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading latest articles...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div id="error-msg">
+      <p>Unable to load articles right now. Visit our blog directly.</p>
+      <a href="https://srimahaganapathijewellers.blogspot.com/" target="_blank" class="retry-btn">Visit Our Blog</a>
+    </div>
+
+    <!-- Featured Post -->
+    <div id="featured-container"></div>
+
+    <!-- Blog Grid -->
+    <div id="blog-grid" class="blogs-grid"></div>
+
+    <!-- View All -->
+    <div id="view-all-box" class="view-all-box" style="display:none;">
+      <p>Discover more stories, tips and jewellery insights on our blog</p>
+      <a href="https://srimahaganapathijewellers.blogspot.com/" target="_blank" class="view-all-btn">View All Blogs</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-brand">Sri Mahaganapathi Jewellers</p>
+  <p class="footer-tagline">Our Craft For Your Precious Stories</p>
+  <p class="footer-copy">© 2025 Sri Mahaganapathi Jewellers · Bengaluru · All Rights Reserved</p>
+</footer>
+
+<script>
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+  // Format date nicely
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // Extract first image from blog content
+  function extractImage(content) {
+    const match = content.match(/<img[^>]+src=["']([^"']+)["']/);
+    return match ? match[1] : null;
+  }
+
+  // Strip HTML tags and trim excerpt
+  function extractExcerpt(content, length = 140) {
+    const text = content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    return text.length > length ? text.substring(0, length) + '...' : text;
+  }
+
+  // Generate a label tag from categories or title keywords
+  function getTag(categories, title) {
+    if (categories && categories.length > 0) return categories[0].term;
+    if (title.toLowerCase().includes('bridal') || title.toLowerCase().includes('wedding')) return 'Bridal';
+    if (title.toLowerCase().includes('silver')) return 'Silver Jewellery';
+    if (title.toLowerCase().includes('diamond')) return 'Diamonds';
+    if (title.toLowerCase().includes('gold')) return 'Gold Jewellery';
+    if (title.toLowerCase().includes('gift')) return 'Gifting';
+    return 'SMJ Journal';
+  }
+
+  // Fetch from Blogger JSON API
+  async function loadBlogs() {
+    const feedUrl = 'https://srimahaganapathijewellers.blogspot.com/feeds/posts/default?alt=json&max-results=10';
+
+    try {
+      const res = await fetch(feedUrl);
+      if (!res.ok) throw new Error('Feed failed');
+      const data = await res.json();
+      const entries = data.feed.entry;
+
+      if (!entries || entries.length === 0) throw new Error('No posts');
+
+      document.getElementById('loading').style.display = 'none';
+
+      // ── FEATURED (first post) ──
+      const first = entries[0];
+      const firstLink = first.link.find(l => l.rel === 'alternate').href;
+      const firstImg = extractImage(first.content.$t) || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80';
+      const firstTag = getTag(first.category, first.title.$t);
+      const firstDate = formatDate(first.published.$t);
+      const firstExcerpt = extractExcerpt(first.content.$t, 200);
+
+      document.getElementById('featured-container').innerHTML = `
+        <a href="${firstLink}" target="_blank" class="featured-card fade-in">
+          <div class="featured-img">
+            <img src="${firstImg}" alt="${first.title.$t}" onerror="this.src='https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80'"/>
+          </div>
+          <div class="featured-content">
+            <span class="featured-tag">Featured · ${firstTag}</span>
+            <h2 class="featured-title">${first.title.$t}</h2>
+            <p class="featured-meta">By SMJ Team &nbsp;·&nbsp; ${firstDate} &nbsp;·&nbsp; Latest Post</p>
+            <p class="featured-excerpt">${firstExcerpt}</p>
+            <span class="featured-read-more">Read Full Article →</span>
+          </div>
+        </a>`;
+
+      // ── GRID (remaining posts) ──
+      const rest = entries.slice(1);
+      const gridHtml = rest.map((entry, i) => {
+        const link = entry.link.find(l => l.rel === 'alternate').href;
+        const img = extractImage(entry.content.$t) || 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80';
+        const tag = getTag(entry.category, entry.title.$t);
+        const date = formatDate(entry.published.$t);
+        const excerpt = extractExcerpt(entry.content.$t, 120);
+
+        return `
+          <a href="${link}" target="_blank" class="blog-card fade-in" style="transition-delay:${i * 80}ms">
+            <div class="blog-card-img">
+              <img src="${img}" alt="${entry.title.$t}" onerror="this.src='https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80'"/>
+            </div>
+            <div class="blog-card-content">
+              <span class="blog-card-tag">${tag}</span>
+              <h3 class="blog-card-title">${entry.title.$t}</h3>
+              <p class="blog-card-meta">${date}</p>
+              <p class="blog-card-excerpt">${excerpt}</p>
+              <div class="blog-card-footer">
+                <span class="blog-card-link">Read More</span>
+                <span class="blog-card-arrow">→</span>
+              </div>
+            </div>
+          </a>`;
+      }).join('');
+
+      document.getElementById('blog-grid').innerHTML = gridHtml;
+      document.getElementById('view-all-box').style.display = 'block';
+
+      // Trigger fade-in animations
+      setTimeout(() => {
+        document.querySelectorAll('.fade-in').forEach((el, i) => {
+          setTimeout(() => el.classList.add('visible'), i * 100);
+        });
+      }, 100);
+
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error-msg').style.display = 'block';
+      console.error('Blog load error:', err);
+    }
+  }
+
+  loadBlogs();
+</script>
+</body>
+</html>
